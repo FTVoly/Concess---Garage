@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution Atelier - IA Auto</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">Rayan<span> MOHAMED</span> Démo</a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="atelier.html" class="active">L'IA Atelier</a></li>
+                <li><a href="commerce.html">L'IA Commerce</a></li>
+            </ul>
+        </nav>
+        <a href="mailto:rayan.mohamedpro@hotmail.com" class="btn-cta">Me Contacter</a>
+    </header>
+
+    <section class="container">
+        <h1>Automatisez votre SAV</h1>
+        <p>Votre standard est saturé ? L'IA répond, qualifie la panne et prend le RDV dans votre agenda.</p>
+
+        <div class="grid-2">
+            <div class="feature-text">
+                <ul style="list-style: none; text-align: left; color: var(--text-muted);">
+                    <li style="margin-bottom: 15px;">✅ <strong>Prise de RDV 24/7 :</strong> Synchronisé avec votre DMS.</li>
+                    <li style="margin-bottom: 15px;">✅ <strong>Filtrage Intelligent :</strong> Distingue une vidange d'une panne moteur.</li>
+                    <li style="margin-bottom: 15px;">✅ <strong>Réponses Prix :</strong> Donne le forfait révision instantanément.</li>
+                </ul>
+                <br>
+                <a href="#" class="btn-cta">Tester l'IA Atelier (en bas à droite)</a>
+            </div>
+
+            <div class="card">
+                <h3 style="color:white; margin-bottom:20px;">Exemple de conversation :</h3>
+                <div class="chat-bubble">Bonjour, je dois faire la révision des 60 000 km.</div>
+                <div class="chat-bubble bot">Bonjour ! C'est noté. Quel est le modèle de votre véhicule et son immatriculation ?</div>
+                <div class="chat-bubble">Clio 5, AA-123-BB.</div>
+                <div class="chat-bubble bot">Parfait. J'ai un créneau disponible ce jeudi à 14h00 pour 1h30 d'intervention. Je valide ?</div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Design du bouton flottant */
+        .chatbot-toggler {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            height: 60px;
+            width: 60px;
+            color: #fff;
+            background: #3b82f6; /* Bleu primaire */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+            z-index: 9999;
+            border: none;
+            font-size: 28px;
+        }
+        .chatbot-toggler:hover { background: #2563eb; transform: scale(1.1); }
+
+        /* Design de la fenêtre de chat */
+        .chatbot-window {
+            position: fixed;
+            right: 35px;
+            bottom: 100px;
+            width: 350px;
+            height: 450px;
+            background: #1e293b; /* Gris foncé carte */
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.5);
+            transform-origin: bottom right;
+            transition: all 0.3s ease;
+            z-index: 9998;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Quand le chat est ouvert */
+        .show-chatbot .chatbot-window {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* Header du chat */
+        .chat-header {
+            background: #3b82f6;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+        }
+        .chat-header h3 { font-size: 1rem; font-weight: 600; margin: 0; }
+        .chat-header span { font-size: 0.8rem; opacity: 0.8; }
+
+        /* Corps du chat */
+        .chat-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .message.bot {
+            background: #334155;
+            color: #f8fafc;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .message.user {
+            background: #3b82f6;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Zone de saisie (footer) */
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            gap: 10px;
+            background: #0f172a;
+        }
+        .chat-input input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+        }
+        .chat-input button {
+            background: transparent;
+            border: none;
+            color: #3b82f6;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+
+    <button class="chatbot-toggler" onclick="document.body.classList.toggle('show-chatbot')">
+        💬
+    </button>
+
+    <div class="chatbot-window">
+        <div class="chat-header">
+            <div>
+                <h3>Assistant Auto</h3>
+                <span>En ligne ●</span>
+            </div>
+            <button onclick="document.body.classList.remove('show-chatbot')" style="background:none;border:none;color:white;cursor:pointer;">✕</button>
+        </div>
+        
+        <div class="chat-body" id="chat-box">
+            </div>
+
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Posez votre question...">
+            <button id="sendBtn" onclick="sendMessage()">➤</button>
+        </div>
+        <div style="text-align: center; padding: 8px 0; background-color: #f8fafc; border-top: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+            <a href="https://volyai-one.vercel.app/index.html" target="_blank" style="text-decoration: none; color: #94a3b8; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; justify-content: center; gap: 4px; transition: color 0.2s;">
+                Propulsé par <span style="color: #2563eb; font-weight: 700;">VOLY</span> ⚡
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 👇👇👇 COLLE TON URL WEBHOOK N8N ICI ENTRE LES GUILLEMETS 👇👇👇
+        const N8N_WEBHOOK_URL = "https://n8n-ube2.onrender.com/webhook/garage-chat"; 
+        // 👆👆👆
+
+        // 1. Message d'accueil contextuel
+        const path = window.location.pathname;
+        const chatBox = document.getElementById('chat-box');
+        let welcomeMessage = "Bonjour ! Je suis l'IA du garage. Comment puis-je vous aider ?";
+
+        if (path.includes("atelier")) {
+            welcomeMessage = "Bonjour ! Besoin d'un RDV atelier ou d'un devis réparation ?";
+        } else if (path.includes("commerce")) {
+            welcomeMessage = "Bonjour ! Vous cherchez un véhicule neuf ou d'occasion ?";
+        }
+
+        addMessage(welcomeMessage, 'bot');
+
+        // 2. Fonction pour ajouter un message à l'écran
+        function addMessage(text, sender) {
+            const div = document.createElement("div");
+            div.classList.add("message", sender);
+            div.textContent = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll vers le bas
+        }
+
+        // 3. Fonction d'envoi vers n8n
+        async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            const userText = inputField.value.trim();
+
+            if (userText === "") return;
+
+            // Affiche le message de l'utilisateur
+            addMessage(userText, 'user');
+            inputField.value = ""; // Vide le champ
+
+            // Affiche un petit "..." temporaire
+            const loadingDiv = document.createElement("div");
+            loadingDiv.classList.add("message", "bot");
+            loadingDiv.textContent = "...";
+            loadingDiv.id = "loading";
+            chatBox.appendChild(loadingDiv);
+
+            try {
+                // Envoi à n8n
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        message: userText,
+                        page: path // On envoie aussi sur quelle page est le client (Atelier ou Commerce)
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Supprime le "..."
+                document.getElementById("loading").remove();
+
+                // Affiche la réponse de l'IA (Assure-toi que ton n8n renvoie un json { "output": "texte" })
+                // Si ton n8n renvoie autre chose, change 'data.output' ci-dessous
+                addMessage(data.output || "Réponse reçue (vérifie ton n8n)", 'bot');
+
+            } catch (error) {
+                document.getElementById("loading").remove();
+                addMessage("Erreur de connexion avec l'IA.", 'bot');
+                console.error("Erreur:", error);
+            }
+        }
+
+        // Permet d'envoyer avec la touche "Entrée"
+        document.getElementById("userInput").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") sendMessage();
+        });
+    </script>
+
+    </body>
+</html>
