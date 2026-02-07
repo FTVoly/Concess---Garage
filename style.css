@@ -43,7 +43,7 @@ nav a:hover, nav a.active { color: var(--primary); }
 h1 { font-size: 3rem; margin-bottom: 20px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; }
 
-/* BOUTONS ET CARTES */
+/* BOUTONS ET CARTES
 .btn-cta {
     background-color: var(--primary);
     color: white;
@@ -58,11 +58,11 @@ p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 40px; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; text-align: left; }
 .card { background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-.card h2 { font-size: 1.5rem; margin-bottom: 15px; color: white; }
+.card h2 { font-size: 1.5rem; margin-bottom: 15px; color: white; } */
 
-/* CHAT BUBBLES (POUR LES DÉMOS) 
+/* CHAT BUBBLES (POUR LES DÉMOS) */
 .chat-bubble { background: #334155; padding: 15px; border-radius: 15px 15px 15px 0; margin-bottom: 15px; font-size: 0.9rem; width: 85%; }
-.chat-bubble.bot { background: var(--primary); color: white; border-radius: 15px 15px 0 15px; margin-left: auto; } */
+.chat-bubble.bot { background: var(--primary); color: white; border-radius: 15px 15px 0 15px; margin-left: auto; } 
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
