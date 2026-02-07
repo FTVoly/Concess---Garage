@@ -167,27 +167,31 @@
         💬
     </button>
 
-    <div class="chatbot-window">
-        <div class="chat-header">
-            <div>
-                <h3>Assistant Auto</h3>
-                <span>En ligne ●</span>
+    <div id="chatbot-container">
+        <button id="chatbot-toggle">💬</button>
+
+        <div id="chatbot-window">
+            <div class="chat-header">
+                <span>Assistant Garage</span>
+                <span id="chatbot-close">✕</span>
             </div>
-            <button onclick="document.body.classList.remove('show-chatbot')" style="background:none;border:none;color:white;cursor:pointer;">✕</button>
-        </div>
-        
-        <div class="chat-body" id="chat-box">
+            
+            <div id="chatbot-messages">
+                <div class="message bot-message">
+                    Bonjour ! Je suis l'assistant virtuel. Je peux prendre votre rendez-vous ou vérifier nos disponibilités.
+                </div>
             </div>
 
-        <div class="chat-input">
-            <input type="text" id="userInput" placeholder="Posez votre question...">
-            <button id="sendBtn" onclick="sendMessage()">➤</button>
-        </div>
-        <div style="text-align: center; padding: 8px 0; background-color: #f8fafc; border-top: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
+            <div class="chat-input-area">
+                <input type="text" id="chatbot-input" placeholder="Écrivez votre message...">
+                <button id="chatbot-send">➤</button>
+            </div>
+            <div style="text-align: center; padding: 8px 0; background-color: #f8fafc; border-top: 1px solid #e5e7eb; border-radius: 0 0 12px 12px;">
                 <a href="https://volyai-one.vercel.app/index.html" target="_blank" style="text-decoration: none; color: #94a3b8; font-size: 11px; font-family: sans-serif; display: flex; align-items: center; justify-content: center; gap: 4px; transition: color 0.2s;">
                     Propulsé par <span style="color: #2563eb; font-weight: 700;">VOLY</span> ⚡
                 </a>
             </div>
+        </div>
     </div>
 
     <script>
