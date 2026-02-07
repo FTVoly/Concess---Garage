@@ -191,80 +191,82 @@
     </div>
 
     <script>
-        // 👇👇👇 COLLE TON URL WEBHOOK N8N ICI ENTRE LES GUILLEMETS 👇👇👇
-        const N8N_WEBHOOK_URL = "https://n8n-ube2.onrender.com/webhook/garage-chat"; 
-        // 👆👆👆
+        // ⬇️⬇️ COLLE TON LIEN N8N ICI ⬇️⬇️
+        const WEBHOOK_URL = "https://n8n-ube2.onrender.com/webhook/garage-chat"; 
 
-        // 1. Message d'accueil contextuel
-        const path = window.location.pathname;
-        const chatBox = document.getElementById('chat-box');
-        let welcomeMessage = "Bonjour ! Je suis l'IA du garage. Comment puis-je vous aider ?";
-
-        if (path.includes("atelier")) {
-            welcomeMessage = "Bonjour ! Besoin d'un RDV atelier ou d'un devis réparation ?";
-        } else if (path.includes("commerce")) {
-            welcomeMessage = "Bonjour ! Vous cherchez un véhicule neuf ou d'occasion ?";
+        // -- Ne touche pas à la suite --
+        let sessionId = localStorage.getItem('chat_session_id');
+        if (!sessionId) {
+            sessionId = "user-" + Math.random().toString(36).substring(2, 9);
+            localStorage.setItem('chat_session_id', sessionId);
         }
 
-        addMessage(welcomeMessage, 'bot');
+        const toggleBtn = document.getElementById('chatbot-toggle');
+        const closeBtn = document.getElementById('chatbot-close');
+        const chatWindow = document.getElementById('chatbot-window');
+        const messagesDiv = document.getElementById('chatbot-messages');
+        const inputField = document.getElementById('chatbot-input');
+        const sendBtn = document.getElementById('chatbot-send');
 
-        // 2. Fonction pour ajouter un message à l'écran
-        function addMessage(text, sender) {
-            const div = document.createElement("div");
-            div.classList.add("message", sender);
-            div.textContent = text;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight; // Scroll vers le bas
+        // Fonction globale pour ouvrir le chat depuis les boutons du site
+        window.openChat = function() {
+            chatWindow.style.display = 'flex';
+            inputField.focus();
         }
 
-        // 3. Fonction d'envoi vers n8n
+        toggleBtn.addEventListener('click', () => {
+            const isHidden = chatWindow.style.display === 'none' || chatWindow.style.display === '';
+            chatWindow.style.display = isHidden ? 'flex' : 'none';
+            if(isHidden) inputField.focus();
+        });
+
+        closeBtn.addEventListener('click', () => chatWindow.style.display = 'none');
+
+        function addMessage(text, isUser) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = isUser ? 'message user-message' : 'message bot-message';
+            msgDiv.innerText = text;
+            messagesDiv.appendChild(msgDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
         async function sendMessage() {
-            const inputField = document.getElementById("userInput");
-            const userText = inputField.value.trim();
+            const text = inputField.value.trim();
+            if (!text) return;
 
-            if (userText === "") return;
+            addMessage(text, true);
+            inputField.value = "";
 
-            // Affiche le message de l'utilisateur
-            addMessage(userText, 'user');
-            inputField.value = ""; // Vide le champ
-
-            // Affiche un petit "..." temporaire
-            const loadingDiv = document.createElement("div");
-            loadingDiv.classList.add("message", "bot");
-            loadingDiv.textContent = "...";
-            loadingDiv.id = "loading";
-            chatBox.appendChild(loadingDiv);
+            // Loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot-loading';
+            loadingDiv.innerText = "• • •";
+            loadingDiv.id = "bot-loading";
+            messagesDiv.appendChild(loadingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             try {
-                // Envoi à n8n
-                const response = await fetch(N8N_WEBHOOK_URL, {
+                const response = await fetch(WEBHOOK_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ 
-                        message: userText,
-                        page: path // On envoie aussi sur quelle page est le client (Atelier ou Commerce)
-                    })
+                    body: JSON.stringify({ chatInput: text, sessionId: sessionId })
                 });
-
-                const data = await response.json();
                 
-                // Supprime le "..."
-                document.getElementById("loading").remove();
-
-                // Affiche la réponse de l'IA (Assure-toi que ton n8n renvoie un json { "output": "texte" })
-                // Si ton n8n renvoie autre chose, change 'data.output' ci-dessous
-                addMessage(data.output || "Réponse reçue (vérifie ton n8n)", 'bot');
+                const data = await response.json();
+                if(document.getElementById("bot-loading")) document.getElementById("bot-loading").remove();
+                
+                const botResponse = data.output || data.text || JSON.stringify(data);
+                addMessage(botResponse, false);
 
             } catch (error) {
-                document.getElementById("loading").remove();
-                addMessage("Erreur de connexion avec l'IA.", 'bot');
-                console.error("Erreur:", error);
+                if(document.getElementById("bot-loading")) document.getElementById("bot-loading").remove();
+                addMessage("Erreur de connexion 😓", false);
             }
         }
 
-        // Permet d'envoyer avec la touche "Entrée"
-        document.getElementById("userInput").addEventListener("keypress", function (e) {
-            if (e.key === "Enter") sendMessage();
+        sendBtn.addEventListener('click', sendMessage);
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
         });
     </script>
 
